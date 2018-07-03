@@ -1,8 +1,0 @@
-/NOLOGO
-/errorReport:prompt
-/MACHINE:x64
-/SUBSYSTEM:WINDOWS
-"D:\workspace\Feastivus_Standalone\Feastivus\Plugins\AdvancedSessions\AdvancedSessions\Intermediate\Build\Win64\UE4\Development\AdvancedSessions\Module.AdvancedSessions.cpp.obj"
-"D:\workspace\Feastivus_Standalone\Feastivus\Plugins\AdvancedSessions\AdvancedSessions\Intermediate\Build\Win64\UE4\Development\AdvancedSessions\Module.AdvancedSessions.gen.cpp.obj"
-"D:\workspace\Feastivus_Standalone\Feastivus\Intermediate\Build\Win64\UE4\Development\AdvancedSessions\PCLaunch.rc.res"
-/OUT:"D:\workspace\Feastivus_Standalone\Feastivus\Plugins\AdvancedSessions\AdvancedSessions\Binaries\Win64\UE4-AdvancedSessions.lib"
