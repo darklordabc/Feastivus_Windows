@@ -35,20 +35,26 @@ void UIngredientChecker::CheckIngredient(const FName Ingredient, const TArray<FN
         auto IngredientListCopy = IngredientList;
         IngredientListCopy.Sort();
 
-        for (int32 IndexA = 0; IndexA != RecipeIngredientListCopy.Num(); ++IndexA)
+        int32 IndexA = 0;
+        while (IndexA != RecipeIngredientListCopy.Num())
         {
             auto RecipeIngredientToCheck = RecipeIngredientListCopy[IndexA];
-            for (int32 IndexB = 0; IndexB != IngredientListCopy.Num(); ++IndexB)
+
+            int32 IndexB = 0;
+            while (IndexB != IngredientListCopy.Num())
             {
                 auto IngredientToCheck = IngredientListCopy[IndexB];
                 if (IngredientToCheck == RecipeIngredientToCheck)
                 {
                     RecipeIngredientListCopy.RemoveAt(IndexA);
                     IngredientListCopy.RemoveAt(IndexB);
-                    IndexA = 0;
+                    IndexA = -1;
                     break;
                 }
+                IndexB++;
             }
+
+            IndexA++;
         }
 
         if (IngredientListCopy.Num() == 0 && RecipeIngredientListCopy.Num() > 0)
@@ -58,10 +64,6 @@ void UIngredientChecker::CheckIngredient(const FName Ingredient, const TArray<FN
     }
 
     UE_LOG(LogTemp, Warning, TEXT("Overlap count is %d"), Overlaps.Num());
-    for (auto &Pair : Overlaps)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Overlap recipe: %s"), *Pair.Key.ToString());
-    }
 
     if (Overlaps.Num() > 0)
     {
@@ -80,10 +82,8 @@ void UIngredientChecker::CheckIngredient(const FName Ingredient, const TArray<FN
             }
         }
     }
-    else
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Checking: failure"));
-        Success = false;
-        return;
-    }
+
+    UE_LOG(LogTemp, Warning, TEXT("Checking: failure"));
+    Success = false;
+    return;
 }
