@@ -2,7 +2,12 @@
 
 #include "IngredientChecker.h"
 
-void UIngredientChecker::CheckIngredient(const FName Ingredient, const TArray<FName> IngredientList, const UDataTable *Recipes, bool &Success, FRecipe &Recipe)
+void UIngredientChecker::CheckIngredient(
+    const TSubclassOf<class AActor> Ingredient,
+    const TArray<TSubclassOf<class AActor>> IngredientList,
+    const UDataTable *Recipes,
+    bool &Success,
+    FRecipe &Recipe)
 {
     // 1. Check IngredientList against all recipes
     //  a) Store all overlaps
@@ -11,15 +16,15 @@ void UIngredientChecker::CheckIngredient(const FName Ingredient, const TArray<FN
     //  a) Return true if Ingredient can be added to any of the overlapping recipes
     //  b) Otherwise, return false
 
-    UE_LOG(LogTemp, Warning, TEXT("Checking ingredient: %s"), *Ingredient.ToString());
-    UE_LOG(LogTemp, Warning, TEXT("Current count is %d"), IngredientList.Num());
+    //UE_LOG(LogTemp, Warning, TEXT("Checking ingredient: %s"), *Ingredient.ToString());
+    //UE_LOG(LogTemp, Warning, TEXT("Current count is %d"), IngredientList.Num());
     for (auto &IngredientToPrint : IngredientList)
     {
-        UE_LOG(LogTemp, Warning, TEXT("One of the ingredients: %s"), *IngredientToPrint.ToString());
+        //UE_LOG(LogTemp, Warning, TEXT("One of the ingredients: %s"), *IngredientToPrint.ToString());
     }
 
     FString ContextString;
-    TMap<FName, TArray<FName>> Overlaps;
+    TMap<FName, TArray<TSubclassOf<class AActor>>> Overlaps;
 
     for (auto &RowName : Recipes->GetRowNames())
     {
@@ -27,7 +32,7 @@ void UIngredientChecker::CheckIngredient(const FName Ingredient, const TArray<FN
         if (RecipeToCheck->IngredientList.Num() <= IngredientList.Num())
             continue;
 
-        UE_LOG(LogTemp, Warning, TEXT("Checking recipe: %s"), *RowName.ToString());
+        //UE_LOG(LogTemp, Warning, TEXT("Checking recipe: %s"), *RowName.ToString());
 
         auto RecipeIngredientListCopy = RecipeToCheck->IngredientList;
         RecipeIngredientListCopy.Sort();
@@ -63,7 +68,7 @@ void UIngredientChecker::CheckIngredient(const FName Ingredient, const TArray<FN
         }
     }
 
-    UE_LOG(LogTemp, Warning, TEXT("Overlap count is %d"), Overlaps.Num());
+    //UE_LOG(LogTemp, Warning, TEXT("Overlap count is %d"), Overlaps.Num());
 
     if (Overlaps.Num() > 0)
     {
@@ -74,16 +79,16 @@ void UIngredientChecker::CheckIngredient(const FName Ingredient, const TArray<FN
                 Success = true;
                 if (Pair.Value.Num() == 1)
                 {
-                    UE_LOG(LogTemp, Warning, TEXT("Completed recipe: %s"), *Pair.Key.ToString());
+                    //UE_LOG(LogTemp, Warning, TEXT("Completed recipe: %s"), *Pair.Key.ToString());
                     Recipe = *Recipes->FindRow<FRecipe>(Pair.Key, ContextString);
                 }
-                UE_LOG(LogTemp, Warning, TEXT("Checking: success"));
+                //UE_LOG(LogTemp, Warning, TEXT("Checking: success"));
                 return;
             }
         }
     }
 
-    UE_LOG(LogTemp, Warning, TEXT("Checking: failure"));
+    //UE_LOG(LogTemp, Warning, TEXT("Checking: failure"));
     Success = false;
     return;
 }

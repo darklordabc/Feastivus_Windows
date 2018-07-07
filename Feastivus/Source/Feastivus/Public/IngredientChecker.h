@@ -17,5 +17,10 @@ class FEASTIVUS_API UIngredientChecker : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 	UFUNCTION(BlueprintCallable)
-	static void CheckIngredient(const FName Ingredient, const TArray<FName> IngredientList, const UDataTable *Recipes, bool &Success, FRecipe &Recipe);
+	static void CheckIngredient(
+		const TSubclassOf<class AActor> Ingredient,
+		const TArray<TSubclassOf<class AActor>> IngredientList,
+		const UDataTable *Recipes,
+		bool &Success,
+		FRecipe &Recipe);
 };
