@@ -4,7 +4,7 @@
 
 void UIngredientChecker::CheckIngredient(
     const TSubclassOf<class AActor> Ingredient,
-    const TArray<TSubclassOf<class AActor>> IngredientList,
+    const TArray<TSubclassOf<class AActor>> Ingredients,
     const UDataTable *Recipes,
     bool &Success,
     FRecipe &Recipe)
@@ -18,10 +18,10 @@ void UIngredientChecker::CheckIngredient(
 
     //UE_LOG(LogTemp, Warning, TEXT("Checking ingredient: %s"), *Ingredient.ToString());
     //UE_LOG(LogTemp, Warning, TEXT("Current count is %d"), IngredientList.Num());
-    for (auto &IngredientToPrint : IngredientList)
-    {
+    // for (auto &IngredientToPrint : IngredientList)
+    // {
         //UE_LOG(LogTemp, Warning, TEXT("One of the ingredients: %s"), *IngredientToPrint.ToString());
-    }
+    // }
 
     FString ContextString;
     TMap<FName, TArray<TSubclassOf<class AActor>>> Overlaps;
@@ -29,30 +29,30 @@ void UIngredientChecker::CheckIngredient(
     for (auto &RowName : Recipes->GetRowNames())
     {
         FRecipe *RecipeToCheck = Recipes->FindRow<FRecipe>(RowName, ContextString);
-        if (RecipeToCheck->IngredientList.Num() <= IngredientList.Num())
+        if (RecipeToCheck->Ingredients.Num() <= Ingredients.Num())
             continue;
 
         //UE_LOG(LogTemp, Warning, TEXT("Checking recipe: %s"), *RowName.ToString());
 
-        auto RecipeIngredientListCopy = RecipeToCheck->IngredientList;
-        RecipeIngredientListCopy.Sort();
+        auto RecipeIngredientsCopy = RecipeToCheck->Ingredients;
+        RecipeIngredientsCopy.Sort();
 
-        auto IngredientListCopy = IngredientList;
-        IngredientListCopy.Sort();
+        auto IngredientsCopy = Ingredients;
+        IngredientsCopy.Sort();
 
         int32 IndexA = 0;
-        while (IndexA != RecipeIngredientListCopy.Num())
+        while (IndexA != RecipeIngredientsCopy.Num())
         {
-            auto RecipeIngredientToCheck = RecipeIngredientListCopy[IndexA];
+            auto RecipeIngredientToCheck = RecipeIngredientsCopy[IndexA];
 
             int32 IndexB = 0;
-            while (IndexB != IngredientListCopy.Num())
+            while (IndexB != IngredientsCopy.Num())
             {
-                auto IngredientToCheck = IngredientListCopy[IndexB];
+                auto IngredientToCheck = IngredientsCopy[IndexB];
                 if (IngredientToCheck == RecipeIngredientToCheck)
                 {
-                    RecipeIngredientListCopy.RemoveAt(IndexA);
-                    IngredientListCopy.RemoveAt(IndexB);
+                    RecipeIngredientsCopy.RemoveAt(IndexA);
+                    IngredientsCopy.RemoveAt(IndexB);
                     IndexA = -1;
                     break;
                 }
@@ -62,9 +62,9 @@ void UIngredientChecker::CheckIngredient(
             IndexA++;
         }
 
-        if (IngredientListCopy.Num() == 0 && RecipeIngredientListCopy.Num() > 0)
+        if (IngredientsCopy.Num() == 0 && RecipeIngredientsCopy.Num() > 0)
         {
-            Overlaps.Add(RowName, RecipeIngredientListCopy);
+            Overlaps.Add(RowName, RecipeIngredientsCopy);
         }
     }
 

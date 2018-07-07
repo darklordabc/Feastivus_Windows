@@ -16,10 +16,10 @@ struct FEASTIVUS_API FRecipe : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName RecipeName;
+	FName Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<TSubclassOf<class AActor>> IngredientList;
+	TArray<TSubclassOf<class AActor>> Ingredients;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class AActor> Dish;
