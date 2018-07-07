@@ -5,9 +5,9 @@
 void UIngredientChecker::CheckIngredient(
     const TSubclassOf<class AActor> Ingredient,
     const TArray<TSubclassOf<class AActor>> Ingredients,
-    const UDataTable *Recipes,
-    bool &Success,
-    FRecipe &Recipe)
+    const TArray<FRecipe> Recipes,
+    bool &bSuccess,
+    int32 &DishIndex)
 {
     // 1. Check IngredientList against all recipes
     //  a) Store all overlaps
@@ -15,26 +15,18 @@ void UIngredientChecker::CheckIngredient(
     // 2. Check Ingredient against all overlapping recipes
     //  a) Return true if Ingredient can be added to any of the overlapping recipes
     //  b) Otherwise, return false
+    // Dish index is only set when recipe is complete
 
-    //UE_LOG(LogTemp, Warning, TEXT("Checking ingredient: %s"), *Ingredient.ToString());
-    //UE_LOG(LogTemp, Warning, TEXT("Current count is %d"), IngredientList.Num());
-    // for (auto &IngredientToPrint : IngredientList)
-    // {
-        //UE_LOG(LogTemp, Warning, TEXT("One of the ingredients: %s"), *IngredientToPrint.ToString());
-    // }
+    DishIndex = -1;
+    TMap<int32, TArray<TSubclassOf<class AActor>>> Overlaps;
 
-    FString ContextString;
-    TMap<FName, TArray<TSubclassOf<class AActor>>> Overlaps;
-
-    for (auto &RowName : Recipes->GetRowNames())
+    for (int32 RecipeIndex = 0; RecipeIndex < Recipes.Num(); RecipeIndex++)
     {
-        FRecipe *RecipeToCheck = Recipes->FindRow<FRecipe>(RowName, ContextString);
-        if (RecipeToCheck->Ingredients.Num() <= Ingredients.Num())
+        FRecipe RecipeToCheck = Recipes[RecipeIndex];
+        if (RecipeToCheck.Ingredients.Num() <= Ingredients.Num())
             continue;
 
-        //UE_LOG(LogTemp, Warning, TEXT("Checking recipe: %s"), *RowName.ToString());
-
-        auto RecipeIngredientsCopy = RecipeToCheck->Ingredients;
+        auto RecipeIngredientsCopy = RecipeToCheck.Ingredients;
         RecipeIngredientsCopy.Sort();
 
         auto IngredientsCopy = Ingredients;
@@ -64,11 +56,9 @@ void UIngredientChecker::CheckIngredient(
 
         if (IngredientsCopy.Num() == 0 && RecipeIngredientsCopy.Num() > 0)
         {
-            Overlaps.Add(RowName, RecipeIngredientsCopy);
+            Overlaps.Add(RecipeIndex, RecipeIngredientsCopy);
         }
     }
-
-    //UE_LOG(LogTemp, Warning, TEXT("Overlap count is %d"), Overlaps.Num());
 
     if (Overlaps.Num() > 0)
     {
@@ -76,19 +66,16 @@ void UIngredientChecker::CheckIngredient(
         {
             if (Pair.Value.Contains(Ingredient))
             {
-                Success = true;
+                bSuccess = true;
                 if (Pair.Value.Num() == 1)
                 {
-                    //UE_LOG(LogTemp, Warning, TEXT("Completed recipe: %s"), *Pair.Key.ToString());
-                    Recipe = *Recipes->FindRow<FRecipe>(Pair.Key, ContextString);
+                    DishIndex = Pair.Key;
                 }
-                //UE_LOG(LogTemp, Warning, TEXT("Checking: success"));
                 return;
             }
         }
     }
 
-    //UE_LOG(LogTemp, Warning, TEXT("Checking: failure"));
-    Success = false;
+    bSuccess = false;
     return;
 }

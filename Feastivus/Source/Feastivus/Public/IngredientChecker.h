@@ -20,7 +20,7 @@ class FEASTIVUS_API UIngredientChecker : public UBlueprintFunctionLibrary
 	static void CheckIngredient(
 		const TSubclassOf<class AActor> Ingredient,
 		const TArray<TSubclassOf<class AActor>> Ingredients,
-		const UDataTable *Recipes,
-		bool &Success,
-		FRecipe &Recipe);
+		const TArray<FRecipe> Recipes,
+		bool &bSuccess,
+		int32 &DishIndex);
 };

@@ -20,7 +20,4 @@ struct FEASTIVUS_API FRecipe : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<TSubclassOf<class AActor>> Ingredients;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class AActor> Dish;
 };
